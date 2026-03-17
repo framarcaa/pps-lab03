@@ -5,6 +5,8 @@ import u03.Sequences.Sequence.*
 import it.unibo.pps.u02.Modules.{Person, isStudent}
 import it.unibo.pps.u02.Modules.Person.*
 
+import scala.annotation.tailrec
+
 object Task2:
   private def getCourse(p: Person): String = p match
     case Student(_, _) => ""
@@ -20,7 +22,17 @@ object Task2:
       case Teacher(_, c) => Cons(c, Nil())
     }
 
-@main def run(): Unit =
+  @tailrec
+  def foldLeft[A, B](s: Sequence[A])(default: B)(mapper: (B, A) => B): B = s match
+    case Cons(h, t) => foldLeft(t)(mapper(default, h))(mapper)
+    case Nil() => default
+
+
+@main def mainCourse(): Unit =
   val people: Sequence[Person] = Cons(Student("mario", 2015), Cons(Teacher("luigi", "pps"), Cons(Teacher("peach", "pps"), Nil())))
   println(Task2.getTeacherCourse(people)) // Should print Cons("pps", Cons("pps", Nil()))
   println(Task2.getTeacherCourseFlatMap(people)) // Should print Cons("pps", Cons("pps", Nil()))
+
+@main def mainLeftFold(): Unit =
+  val lst = Cons(3, Cons(7, Cons(1, Cons(5, Nil()))))
+  println(Task2.foldLeft(lst)(0)(_ - _)) // -16
