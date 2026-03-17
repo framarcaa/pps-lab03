@@ -27,6 +27,11 @@ object Task2:
     case Cons(h, t) => foldLeft(t)(mapper(default, h))(mapper)
     case Nil() => default
 
+  def distinctCourse(s: Sequence[Person]): Int =
+    val teacherCourses = map(filter(s)(!isStudent(_)))(getCourse)
+    val uniqueCourses = distinct(teacherCourses)
+    foldLeft(uniqueCourses)(0)((acc, _) => acc + 1)
+
 
 @main def mainCourse(): Unit =
   val people: Sequence[Person] = Cons(Student("mario", 2015), Cons(Teacher("luigi", "pps"), Cons(Teacher("peach", "pps"), Nil())))
@@ -36,3 +41,7 @@ object Task2:
 @main def mainLeftFold(): Unit =
   val lst = Cons(3, Cons(7, Cons(1, Cons(5, Nil()))))
   println(Task2.foldLeft(lst)(0)(_ - _)) // -16
+
+@main def mainDistinctCourse(): Unit =
+  val people: Sequence[Person] = Cons(Student("mario", 2015), Cons(Teacher("luigi", "pps"), Cons(Teacher("peach", "pps"), Cons(Teacher("apple", "pcd"), Nil()))))
+  println(Task2.distinctCourse(people)) // Should print 1
